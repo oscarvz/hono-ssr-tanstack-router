@@ -1,14 +1,23 @@
+import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import { hydrateRoot } from "react-dom/client";
-import { Home } from "./components";
-import { Document } from "./document";
-import "./style.css";
+
+// Import the generated route tree
+import { routeTree } from "./routeTree.gen";
+
+// Create a new router instance
+const router = createRouter({ routeTree });
+
+// Register the router instance for type safety
+declare module "@tanstack/react-router" {
+  interface Register {
+    router: typeof router;
+  }
+}
 
 hydrateRoot(
   document,
   <StrictMode>
-    <Document>
-      <Home />
-    </Document>
+    <RouterProvider router={router} />
   </StrictMode>,
 );
