@@ -1,23 +1,7 @@
-import { RouterProvider, createRouter } from "@tanstack/react-router";
-import { StrictMode } from "react";
+import { RouterClient } from "@tanstack/react-router/ssr/client";
 import { hydrateRoot } from "react-dom/client";
+import { createRouter } from "./router";
 
-// Import the generated route tree
-import { routeTree } from "./routeTree.gen";
+const router = createRouter();
 
-// Create a new router instance
-const router = createRouter({ routeTree });
-
-// Register the router instance for type safety
-declare module "@tanstack/react-router" {
-  interface Register {
-    router: typeof router;
-  }
-}
-
-hydrateRoot(
-  document,
-  <StrictMode>
-    <RouterProvider router={router} />
-  </StrictMode>,
-);
+hydrateRoot(document, <RouterClient router={router} />);

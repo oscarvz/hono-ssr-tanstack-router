@@ -1,15 +1,19 @@
+import {
+  createRequestHandler,
+  defaultRenderHandler,
+} from "@tanstack/react-router/ssr/server";
 import { Hono } from "hono";
-import { RouterProvider, createRouter } from "@tanstack/react-router";
-import { renderer } from "./renderer";
-import { routeTree } from "./routeTree.gen";
+import { createRouter } from "./router";
 
 const app = new Hono();
 
-app.use(renderer);
+app.get("*", async (c) => {
+  const handler = createRequestHandler({
+    request: c.req.raw,
+    createRouter,
+  });
 
-// Create router for SSR
-const router = createRouter({ routeTree });
-
-app.get("*", (c) => c.render(<RouterProvider router={router} />));
+  return await handler(defaultRenderHandler);
+});
 
 export default app;
